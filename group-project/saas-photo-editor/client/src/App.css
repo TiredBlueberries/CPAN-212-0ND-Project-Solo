@@ -40,3 +40,50 @@
 .read-the-docs {
   color: #888;
 }
+.navbar {
+  padding: 1rem;
+  background: #333;
+  color: white;
+  display: flex;
+  gap: 1rem;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+}
+
+.gallery-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.drawings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.drawing-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.drawing-image {
+  width: 100%;
+  height: 250px;
+  object-fit: contain;
+  background: #f5f5f5;
+}
+
+.drawing-info {
+  padding: 1rem;
+}
+
+.edit-link {
+  display: inline-block;
+  margin-top: 0.5rem;
+  color: #646cff;
+}

@@ -1,9 +1,18 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const drawingSchema = new mongoose.Schema({
   imageData: {
-    type: String, 
+    type: String,
     required: true
+  },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  title: {
+    type: String,
+    default: 'Untitled'
   }
 }, { timestamps: true });
 

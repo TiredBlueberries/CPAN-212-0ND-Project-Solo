@@ -1,11 +1,8 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 
 const Editor = () => {
-  // Refs for the canvas and Fabric.js instance
   const canvasRef = useRef(null);
   const fabricInstanceRef = useRef(null);
-
-  // State variables for drawing mode, brush properties, history tracking, and save status
   const [isDrawing, setIsDrawing] = useState(true);
   const [brushColor, setBrushColor] = useState("#000000");
   const [brushSize, setBrushSize] = useState(5);
@@ -13,43 +10,37 @@ const Editor = () => {
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [isSaving, setIsSaving] = useState(false);
 
-  // Reference to store the saveToHistory function to help re-renders
   const saveToHistoryRef = useRef();
   saveToHistoryRef.current = (canvas) => {
-    const json = JSON.stringify(canvas.toJSON()); // Convert canvas state to JSON format
-    setHistory(prev => [...prev.slice(0, historyIndex + 1), json]); // Save new state and discard forward history
+    const json = JSON.stringify(canvas.toJSON());
+    setHistory(prev => [...prev.slice(0, historyIndex + 1), json]);
     setHistoryIndex(prev => prev + 1);
   };
 
   useEffect(() => {
     import("fabric").then((fabric) => {
       if (!canvasRef.current) return;
-  
-      // Get rid of any fabric instance in case
       if (canvasRef.current.__fabric) {
         canvasRef.current.__fabric.dispose();
       }
-  
-      // Initialize a new Fabric.js canvas
+
       const fabricCanvas = new fabric.Canvas(canvasRef.current, {
         width: 800,
         height: 500,
         backgroundColor: "#ffffff",
-        isDrawingMode: true, // Enable drawing mode
+        isDrawingMode: true,
       });
-  
+
       fabricCanvas.renderAll();
-      saveToHistoryRef.current(fabricCanvas); // Save initial state to history
-  
-      // Set up the brush properties
+      saveToHistoryRef.current(fabricCanvas);
+
       fabricCanvas.freeDrawingBrush = new fabric.PencilBrush(fabricCanvas);
       fabricCanvas.freeDrawingBrush.color = brushColor;
       fabricCanvas.freeDrawingBrush.width = brushSize;
 
       fabricInstanceRef.current = fabric;
-      canvasRef.current.__fabric = fabricCanvas; // Store instance in ref
+      canvasRef.current.__fabric = fabricCanvas;
 
-      // Event listener to track drawing actions and save to history
       const handlePathCreated = () => {
         saveToHistoryRef.current(fabricCanvas);
         fabricCanvas.requestRenderAll();
@@ -69,29 +60,32 @@ const Editor = () => {
     };
   }, []);
 
-  // Function to save the drawing as an image and send it to the backend
   const saveDrawing = async () => {
     if (!canvasRef.current?.__fabric) return;
     
     setIsSaving(true);
     try {
-      const imageData = canvasRef.current.__fabric.toDataURL('png'); // Convert canvas to image
+      const imageData = canvasRef.current.__fabric.toDataURL('png');
+      const token = localStorage.getItem('token');
+      const title = prompt('Enter drawing title:', 'Untitled');
+  
       const response = await fetch('http://localhost:5000/api/drawings', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ imageData }),
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ imageData, title }),
       });
-
+  
       if (!response.ok) throw new Error('Save failed');
-      const result = await response.json();
-      alert(`Drawing saved! ID: ${result._id}`);
+      alert('Drawing saved successfully!');
     } catch (error) {
       alert('Failed to save: ' + error.message);
     } finally {
       setIsSaving(false);
     }
   };
-
   // Effect to update brush color dynamically
   useEffect(() => {
     const canvas = canvasRef.current?.__fabric;
