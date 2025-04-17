@@ -25,17 +25,3 @@ router.get('/', async (req, res) => {
     res.status(500).json({ message: 'Error fetching canvases' });
   }
 });
-
-router.get('/:id', async (req, res) => {
-  try {
-    const canvas = await Canvas.findOne({
-      _id: req.params.id,
-      user: req.user.userId
-    });
-    canvas ? res.json(canvas) : res.status(404).json({ message: 'Canvas not found' });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
-export default router;
