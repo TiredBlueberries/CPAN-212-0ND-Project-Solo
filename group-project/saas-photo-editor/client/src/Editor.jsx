@@ -4,8 +4,11 @@ const Editor = () => {
   const canvasRef = useRef(null);
   const fabricInstanceRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(true);
+
+  // Drawing state
   const [brushColor, setBrushColor] = useState("#000000");
   const [brushSize, setBrushSize] = useState(5);
+
   const [history, setHistory] = useState([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [isSaving, setIsSaving] = useState(false);
@@ -46,6 +49,7 @@ const Editor = () => {
         fabricCanvas.requestRenderAll();
       };
       
+       // History tracking on path creation
       fabricCanvas.on("path:created", handlePathCreated);
 
       return () => {
@@ -60,6 +64,8 @@ const Editor = () => {
     };
   }, []);
 
+
+   // Save drawing to backend
   const saveDrawing = async () => {
     if (!canvasRef.current?.__fabric) return;
     

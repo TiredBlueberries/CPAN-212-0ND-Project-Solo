@@ -43,7 +43,7 @@ function App() {
       />
       
       <Routes>
-        {/* Login Route */}
+       
         <Route 
           path="/login" 
           element={
@@ -60,7 +60,7 @@ function App() {
           } 
         />
 
-        {/* Protected Routes */}
+        
         <Route 
           path="/" 
           element={
@@ -83,7 +83,7 @@ function App() {
           } 
         />
 
-        {/* Catch-all Redirect */}
+        
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>

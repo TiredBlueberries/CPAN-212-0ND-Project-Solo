@@ -6,7 +6,7 @@ const Navbar = ({ isAuthenticated, onLogout }) => {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    onLogout(); // Trigger parent state update
+    onLogout();
     navigate('/login');
   };
 
