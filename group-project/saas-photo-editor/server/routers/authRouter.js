@@ -71,7 +71,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// Login endpoint (NEWLY ADDED)
+// Login endpoint
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -101,4 +101,4 @@ router.post('/login', async (req, res) => {
   }
 });
 
-export default router;  // Make sure this export exists
+export default router;
